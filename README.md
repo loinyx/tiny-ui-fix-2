@@ -8,8 +8,8 @@ Tiny UI Fix makes The Sims 3's interface bigger, without blur, on high-resolutio
 
 ## Download and install
 
-1. Download **`Tiny UI Fix 2.exe`** from the [latest release](https://github.com/loinyx/tiny-ui-fix-2/releases/latest). It's a single file: nothing else to download or install.
-2. Close The Sims 3 and open `Tiny UI Fix 2.exe`.
+1. Download **`Tiny-UI-Fix-2.exe`** from the [latest release](https://github.com/loinyx/tiny-ui-fix-2/releases/latest). It's a single file: nothing else to download or install.
+2. Close The Sims 3 and open `Tiny-UI-Fix-2.exe`.
 3. Follow the steps: pick your game and a size, check the compatibility fixes, then **Generate package**.
 4. Start the game.
 
