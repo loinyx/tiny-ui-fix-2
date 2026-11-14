@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Runs without the game: "dotnet run" in this folder, add the integration switch to also read the real script; exit code 1 on any failure -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\TinyUIFixApp\Tuf.cs" Link="App\Tuf.cs" />
+    <Compile Include="..\TinyUIFixApp\Games.cs" Link="App\Games.cs" />
+    <Compile Include="..\TinyUIFixApp\Strings.cs" Link="App\Strings.cs" />
+    <EmbeddedResource Include="..\TinyUIFixApp\Strings\*.json" LogicalName="Strings.%(Filename).json" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>TinyUIFixApp</RootNamespace>
+    <AssemblyName>Tiny UI Fix 2</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWinUI>true</UseWinUI>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <!-- one exe next to the .bat: no MSIX, no runtime to install -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <Version>2.0.0</Version>
+    <Product>Tiny UI Fix 2</Product>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260921001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
+    <Content Include="Assets\app.ico" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="Strings\*.json" LogicalName="Strings.%(Filename).json" />
+    <EmbeddedResource Include="Assets\preview_scene.jpg" LogicalName="preview_scene.jpg" />
+    <EmbeddedResource Include="Assets\preview_hud.png" LogicalName="preview_hud.png" />
+    <!-- the tool itself, so a download is one file; built by Building/Package-SingleFileDistributables.ps1 -->
+    <EmbeddedResource Include="$(ToolBat)" LogicalName="tiny-ui-fix-for-ts3.bat" Condition="'$(ToolBat)' != '' And Exists('$(ToolBat)')" />
+  </ItemGroup>
+</Project>
