@@ -118,9 +118,21 @@ namespace TinyUIFixForTS3Patcher
 			return area * multiplier;
 		}
 
+		/* Text is drawn from its window's position, so a fractional position puts every glyph between two pixels,
+		   which edge smoothing turns into uneven, wobbly text at scales such as 1.3 or 1.5. */
+		public static Vector4 RoundArea (Vector4 area)
+		{
+			return new Vector4(RoundToPixel(area.X), RoundToPixel(area.Y), RoundToPixel(area.Z), RoundToPixel(area.W));
+		}
+
+		public static float RoundToPixel (float value)
+		{
+			return (float) Math.Round(value, MidpointRounding.AwayFromZero);
+		}
+
 		public static string ScaleAreaStringBy (string area, float multiplier)
 		{
-			return AreaToString(AreaFromString(area) * multiplier);
+			return AreaToString(RoundArea(AreaFromString(area) * multiplier));
 		}
 
 		public static Vector2 ScalePointBy (Vector2 point, float multiplier)
@@ -1250,6 +1262,23 @@ namespace TinyUIFixForTS3Patcher
 			stringBuilder = new StringBuilder(30);
 		}
 
+		/* The game's own sizes land on whole pixels (8.25pt is 11px at 96 DPI); a scaled size such as 15.4px
+		   is rasterised between pixel sizes and looks wobbly, so it's kept on a whole pixel. */
+		public static float RoundSizeToPixel (float size, string unit)
+		{
+			if (unit == "pt")
+			{
+				return (float) (Math.Round(size * 4.0 / 3.0, MidpointRounding.AwayFromZero) * 0.75);
+			}
+
+			if (unit == "px" || unit.Length == 0)
+			{
+				return (float) Math.Round(size, MidpointRounding.AwayFromZero);
+			}
+
+			return size;
+		}
+
 		public static string ScaleStyleSheetBy (string css, float multiplier)
 		{
 			/* The style-sheets used for the text-styles in the Sims 3 are written in some bizarre CSS-but-not-quite language.
@@ -1292,7 +1321,7 @@ namespace TinyUIFixForTS3Patcher
 						if (matches.Success)
 						{
 							stringBuilder.Clear();
-							stringBuilder.AppendFormat(Parsing.floatFormat, floatFormatString, float.Parse(matches.Groups[1].Value, Parsing.floatFormat) * multiplier);
+							stringBuilder.AppendFormat(Parsing.floatFormat, floatFormatString, RoundSizeToPixel(float.Parse(matches.Groups[1].Value, Parsing.floatFormat) * multiplier, matches.Groups[2].Value));
 							stringBuilder.Append(matches.Groups[2].Value);
 							stringBuilder.Append(matches.Groups[3].Value);
 							rewrittenValue = stringBuilder.ToString();
@@ -1306,7 +1335,7 @@ namespace TinyUIFixForTS3Patcher
 						if (matches.Success)
 						{
 							stringBuilder.Clear();
-							stringBuilder.AppendFormat(Parsing.floatFormat, floatFormatString, float.Parse(matches.Groups[1].Value, Parsing.floatFormat) * multiplier);
+							stringBuilder.AppendFormat(Parsing.floatFormat, floatFormatString, RoundSizeToPixel(float.Parse(matches.Groups[1].Value, Parsing.floatFormat) * multiplier, matches.Groups[2].Value));
 							stringBuilder.Append(matches.Groups[2].Value);
 							rewrittenValue = stringBuilder.ToString();
 						}
