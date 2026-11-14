@@ -3638,7 +3638,10 @@ function Apply-PatchesToResources (
 			$CSS = [TinyUIFixForTS3Patcher.StyleSheetScaler]::ScaleStyleSheetBy($CSS, $State.Patchsets.Nucleus.Instance.EffectiveTextScale)
 
 			$StyleSheet = [s3pi.WrapperDealer.WrapperDealer]::CreateNewResource(1, '0x{0:X08}' -f [TinyUIFixPSForTS3]::_CSSTypeID)
-			[IO.StreamWriter]::new($StyleSheet.Stream, $UTF8).Write($CSS)
+			$CSSWriter = [IO.StreamWriter]::new($StyleSheet.Stream, $UTF8)
+			$CSSWriter.Write($CSS)
+			<# Without a flush the writer's last, partly-filled buffer is lost, and the end of the style-sheet with it. #>
+			$CSSWriter.Flush()
 			$CSS = $Null
 			$State.IntoPackage.AddResource($IndexEntry, $StyleSheet.Stream, $False)
 
