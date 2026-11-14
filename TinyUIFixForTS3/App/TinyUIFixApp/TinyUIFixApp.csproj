@@ -24,7 +24,7 @@
          (found by reflection when collections are handed to WinUI) stay whole -->
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <Product>Tiny UI Fix 2</Product>
   </PropertyGroup>
   <ItemGroup>
