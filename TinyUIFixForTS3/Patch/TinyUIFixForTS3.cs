@@ -2095,6 +2095,7 @@ namespace TinyUIFixForTS3.UI
 		public const int scaledSliderMimicLayoutID = 0x7085840b;
 		public const int actualSliderGlideEffectGroupID = 0x7085850b;
 		public const int mimicSliderGlideEffectGroupID = 0x7085860b;
+		public const float thumbRemeasuringDurationInMS = 5000f;
 		public static readonly Type buttonType = typeof(Button);
 		public static readonly int[] keyboardChangeDeltas = {1, 8, 32, 64, 128, 256};
 
@@ -2108,6 +2109,7 @@ namespace TinyUIFixForTS3.UI
 		public Button thumbContainer;
 		public WindowBase actualParent;
 		public float thumbFirstGrabbedAt = float.NaN;
+		public StopWatch thumbRemeasuringTimer;
 		/* Sims3.UI.Slider#Value is clamped between the MinValue and MaxValue,
 		   so we keep track of any out-of-bounds values we've set ourselves. */
 		public int nonRestrictedValue;
@@ -2215,6 +2217,7 @@ namespace TinyUIFixForTS3.UI
 			this.thumb.Area = this.AreaForThumb(thumbContainerArea, activeValue);
 			this.HideActualSlider();
 			this.AttachEvents();
+			this.StartRemeasuringThumb();
 
 			var actualSliderWinHandle = this.actualSlider.WinHandle;
 			var actualEventData = EventRegistrationChangeEvents.UIEventRegistryForWinHandle(actualSliderWinHandle);
@@ -2276,6 +2279,53 @@ namespace TinyUIFixForTS3.UI
 		private static void CopySliderComponentDrawable (DrawableBase source, DrawableBase destination)
 		{
 			DrawableHandling.CopyDrawableToDrawable(source, destination);
+		}
+
+		/* The thumb is sized from its image, but the game may still be loading that image when the mimic
+		   is made, in which case Button.AutoSize measures a smaller placeholder and the thumb is drawn squashed.
+		   So the thumb is re-measured every tick for a short while, until its image has had time to load. */
+		private void StartRemeasuringThumb ()
+		{
+			this.thumbRemeasuringTimer = StopWatch.Create(StopWatch.TickStyles.Milliseconds);
+			this.thumbRemeasuringTimer.Start();
+			this.mimicSlider.Tick += this.RemeasureThumb;
+		}
+
+		private void StopRemeasuringThumb ()
+		{
+			if (!this.mimicSlider.Disposed)
+			{
+				this.mimicSlider.Tick -= this.RemeasureThumb;
+			}
+
+			if (this.thumbRemeasuringTimer as object != null)
+			{
+				this.thumbRemeasuringTimer.Dispose();
+				this.thumbRemeasuringTimer = null;
+			}
+		}
+
+		public void RemeasureThumb (WindowBase sender, UIEventArgs eventArgs)
+		{
+			if (
+				   this.mimicSlider.Disposed
+				|| this.actualSlider.Disposed
+				|| this.thumbRemeasuringTimer as object == null
+				|| this.thumbRemeasuringTimer.GetElapsedTimeFloat() >= thumbRemeasuringDurationInMS
+			)
+			{
+				this.StopRemeasuringThumb();
+				return;
+			}
+
+			/* Don't move the thumb out from under the cursor while it's being dragged. */
+			if (!float.IsNaN(this.thumbFirstGrabbedAt))
+			{
+				return;
+			}
+
+			var thumbContainerArea = this.MimicAreaOfActualSlider(this.actualSlider.Area);
+			this.thumb.Area = this.AreaForThumb(thumbContainerArea, this.nonRestrictedValue);
 		}
 
 		public Rect MimicAreaOfActualSlider (Rect actualArea)
