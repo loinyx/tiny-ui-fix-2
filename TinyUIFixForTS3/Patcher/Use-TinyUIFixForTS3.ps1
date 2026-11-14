@@ -80,6 +80,9 @@ Param (
 			[Switch] $SkipConfigurator,
 
 	[Parameter()]
+			[String] $WriteConfiguratorStateTo,
+
+	[Parameter()]
 			[UInt16] $ConfiguratorPort,
 
 	[Parameter()]
@@ -768,6 +771,19 @@ function Get-Sims3InstallationStateOnWindows ($OverrideSims3Path, $OverrideSims3
 			}
 		}
 	)
+
+	<# The Tiny UI Fix 2 app can pass a copy of the game laid out like Steam's (expansions inside it)
+	   that isn't in a Steam library; it's then offered as the Steam version. #>
+	if ($env:TINY_UI_FIX_GAME_PATH -and $Null -eq $OverrideSims3Path -and (Test-Path -LiteralPath (Join-Path $env:TINY_UI_FIX_GAME_PATH 'Game\Bin\TS3W.exe')))
+	{
+		$CustomGamePath = $env:TINY_UI_FIX_GAME_PATH
+		$CustomGameLocale = if ($Null -ne $RegistryData.Sims3.BaseGame.Locale) {$RegistryData.Sims3.BaseGame.Locale} else {'en-US'}
+
+		$Sims3Steam = [PSCustomObject] @{
+			BaseGame = [PSCustomObject] @{Path = $CustomGamePath; Locale = $CustomGameLocale}
+			GamePacks = @(Get-ChildItem -Directory -LiteralPath $CustomGamePath | ? {$_.Name -match '^(?:SP[1-9]|EP(?:[1-9]|1[0-1]))$'} | % {[PSCustomObject] @{Path = $_.FullName; Locale = $CustomGameLocale}})
+		}
+	}
 
 	$UserDataPathForLocale = if ($Null -eq $OverrideSims3UserDataPath)
 	{
@@ -6241,7 +6257,7 @@ try
 		continue
 	}
 
-	$UsingConfigurator = -not $NonInteractive -and -not $SkipConfigurator
+	$UsingConfigurator = (-not $NonInteractive -or $WriteConfiguratorStateTo) -and -not $SkipConfigurator
 	$CheckingIfPatchsetsAreRecommended = $UsingConfigurator -or $GetPatchsetRecommendations
 	$ResolvingResourcePriorities = -not $SkipGenerationOfPackage -or $GetResolvedPackagePriorities -or $UsingConfigurator -or $CheckingIfPatchsetsAreRecommended
 	$FindingSims3Paths = $ResolvingResourcePriorities
@@ -6932,6 +6948,28 @@ try
 		}
 
 		[TinyUIFixPSForTS3]::WriteLineQuickly([Environment]::NewLine)
+
+		<# The Tiny UI Fix 2 app shows the configurator's state in its own window instead of the web page. #>
+		if ($WriteConfiguratorStateTo)
+		{
+			$ConfiguratorState = [Ordered] @{
+				ScriptVersion = [TinyUIFixPSForTS3]::Version.ToString()
+				GamePath = $InstallationState.BaseGame.Path
+				UserDataPath = $InstallationState.Sims3UserDataPath
+				UIScale = "$($PatchingState.Configuration.Nucleus.UIScale)"
+				TextScale = "$($PatchingState.Configuration.Nucleus.TextScale)"
+				CursorScale = "$($PatchingState.Configuration.Nucleus.CursorScale)"
+				CursorScalingAlgorithm = "$($PatchingState.Configuration.Nucleus.CursorScalingAlgorithm)"
+				DisableRuntimeModMismatchCheck = [Bool] $PatchingState.Configuration.Nucleus.DisableRuntimeModMismatchCheck
+				LoadOrder = @($LoadOrder.ByIndex)
+				LoadOrderNotActivelySetByUser = $Null -eq $Script:PSBoundParameters.PatchsetLoadOrder
+				DisabledRecommendedPatchsets = @($DisabledRecommendedPatchsets)
+				Patchsets = @($AvailablePatchsetsForConfigurator | % {[Ordered] @{ID = $_.ID; Version = "$($_.Version)"; Name = $_.Name; Description = $_.Description; Active = [Bool] $_.Active; Fixed = [Bool] $_.FixedActiveState; Recommendation = $_.RecommendationMessage}})
+			}
+
+			[IO.File]::WriteAllText($WriteConfiguratorStateTo, (ConvertTo-Json -InputObject $ConfiguratorState -Depth 6), [Text.UTF8Encoding]::new($False))
+			return
+		}
 
 		$ConfiguratorInvocation = Invoke-Configurator `
 			-Port $(if ($Null -ne $Script:PSBoundParameters.ConfiguratorPort) {$ConfiguratorPort}) `
