@@ -35,6 +35,16 @@ ${If it's Christmas!} = $($Now = [DateTime]::Now; if ($Now.Month -eq 12 -and $No
 					return
 				}
 
+				<# Main menu: the game places its panels 65% and 90% of the way down; with a scaled UI they hug the bottom edge, so centre them. #>
+				if ($ResourceKey.Instance -eq (0xda0227dfd918adf7 -band [UInt64]::MaxValue))
+				{
+					foreach ($Spacing in $XML.SelectNodes('//object[@cls = "CenterInParentLayout"]/prop[@name = "VerticalSpacing"]'))
+					{
+						$Spacing.SetAttribute('value', '0.55')
+					}
+					return
+				}
+
 				$CASTattooLayoutResourceKey = $TinyUIFixPSForTS3ResourceKeys.CASTattooLayout
 				if (
 					     $CASTattooLayoutResourceKey.Instance -eq $ResourceKey.Instance `
