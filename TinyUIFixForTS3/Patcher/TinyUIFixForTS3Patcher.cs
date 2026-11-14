@@ -127,7 +127,8 @@ namespace TinyUIFixForTS3Patcher
 
 		public static float RoundToPixel (float value)
 		{
-			return (float) Math.Round(value, MidpointRounding.AwayFromZero);
+			/* Halves round up rather than away from zero, so both edges of an area move the same way and its size is kept. */
+			return (float) Math.Floor(value + 0.5f);
 		}
 
 		public static string ScaleAreaStringBy (string area, float multiplier)
