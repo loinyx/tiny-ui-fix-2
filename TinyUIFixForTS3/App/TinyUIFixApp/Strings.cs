@@ -61,7 +61,7 @@ public static class L
     static Dictionary<string, string>? Load(string code)
     {
         using var stream = typeof(L).Assembly.GetManifestResourceStream($"Strings.{code}.json");
-        return stream is null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(stream);
+        return stream is null ? null : JsonSerializer.Deserialize(stream, AppJson.Default.DictionaryStringString);
     }
 
     public static string T(string key) => _current.TryGetValue(key, out var text) || _english.TryGetValue(key, out text) ? text : key;

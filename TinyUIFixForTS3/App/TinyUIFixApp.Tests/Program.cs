@@ -137,7 +137,10 @@ if (home is not null)
 // --- the real script, read-only: it reports the state the app shows
 if (args.Contains("--integration") && home is not null)
 {
-    var game = Games.Find(null).FirstOrDefault(g => g.Kind != "ea") ?? Games.Find(null).FirstOrDefault();
+    // as the app does: the saved choice first, then what's found
+    var saved = Games.LoadChoice(Tuf.ScriptFolder(home));
+    var games = Games.Find(saved?.Kind == "folder" ? saved.Path : null);
+    var game = games.FirstOrDefault(g => g == saved) ?? games.FirstOrDefault(g => g.Kind != "ea") ?? games.FirstOrDefault();
     if (game is null) Check("a game install to read", false, "none found");
     else
     {

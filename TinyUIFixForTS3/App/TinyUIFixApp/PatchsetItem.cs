@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace TinyUIFixApp;
 
-public sealed class PatchsetItem : INotifyPropertyChanged
+public sealed partial class PatchsetItem : INotifyPropertyChanged
 {
     bool _enabled;
 

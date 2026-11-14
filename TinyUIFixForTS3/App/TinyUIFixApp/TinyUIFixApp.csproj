@@ -20,11 +20,26 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <!-- trims the .NET framework and the Windows SDK projection; the app's own code and the WinRT/WinUI interop
+         (found by reflection when collections are handed to WinUI) stay whole -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
     <Version>2.0.0</Version>
     <Product>Tiny UI Fix 2</Product>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260921001" />
+    <TrimmerRootAssembly Include="WinRT.Runtime" />
+    <TrimmerRootAssembly Include="Microsoft.WinUI" />
+    <TrimmerRootAssembly Include="Microsoft.InteractiveExperiences.Projection" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- the Windows App SDK's parts this app uses, without its AI, ML (onnxruntime, DirectML) and Widgets parts, about 40 MB it never loads -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260803002" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.260708001" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260803003" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25122902" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260921001" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
     <Content Include="Assets\app.ico" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="Strings\*.json" LogicalName="Strings.%(Filename).json" />
@@ -33,4 +48,12 @@
     <!-- the tool itself, so a download is one file; built by Building/Package-SingleFileDistributables.ps1 -->
     <EmbeddedResource Include="$(ToolBat)" LogicalName="tiny-ui-fix-for-ts3.bat" Condition="'$(ToolBat)' != '' And Exists('$(ToolBat)')" />
   </ItemGroup>
+  <!-- The self-contained Windows App SDK runtime ships its AI, machine-learning (onnxruntime, DirectML) and Widgets
+       parts too; this app never calls them, and they're loaded only when called, so they stay out of the exe (about 45 MB). -->
+  <Target Name="LeaveOutUnusedWindowsAppSdkParts" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+          Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)%(Extension)', '^(onnxruntime.*|DirectML\..*|Microsoft\.Windows\.AI(\..*)?\.(dll|winmd)|Microsoft\.Windows\.Widgets\..*)$', RegexOptions.IgnoreCase))" />
+    </ItemGroup>
+  </Target>
 </Project>

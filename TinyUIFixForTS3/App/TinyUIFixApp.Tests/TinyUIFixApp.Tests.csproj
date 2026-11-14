@@ -10,6 +10,7 @@
     <Compile Include="..\TinyUIFixApp\Tuf.cs" Link="App\Tuf.cs" />
     <Compile Include="..\TinyUIFixApp\Games.cs" Link="App\Games.cs" />
     <Compile Include="..\TinyUIFixApp\Strings.cs" Link="App\Strings.cs" />
+    <Compile Include="..\TinyUIFixApp\AppJson.cs" Link="App\AppJson.cs" />
     <EmbeddedResource Include="..\TinyUIFixApp\Strings\*.json" LogicalName="Strings.%(Filename).json" />
   </ItemGroup>
 </Project>

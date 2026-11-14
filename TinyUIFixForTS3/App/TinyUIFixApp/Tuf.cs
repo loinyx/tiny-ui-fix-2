@@ -125,7 +125,7 @@ public static class Tuf
         File.Delete(file);
         var (exit, output) = await RunAsync(home, game, $"-WriteConfiguratorStateTo '{file.Replace("'", "''")}'", onLine);
         if (!File.Exists(file)) throw new ScriptException(L.T("error.readState"), output);
-        try { return JsonSerializer.Deserialize<State>(File.ReadAllText(file))!; }
+        try { return JsonSerializer.Deserialize(File.ReadAllText(file), AppJson.Default.State)!; }
         finally { File.Delete(file); }
     }
 

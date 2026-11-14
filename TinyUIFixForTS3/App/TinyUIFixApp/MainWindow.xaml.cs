@@ -130,6 +130,10 @@ public sealed partial class MainWindow : Window
             ProblemInfo.Title = e.Message;
             ProblemInfo.Message = e is ScriptException ? L.T("problem.log") : e.GetType().Name;
             ProblemLog.Text = (e as ScriptException)?.Output ?? e.ToString();
+            var noGame = _home is not null && _games.Count == 0;
+            ProblemPickGame.Visibility = noGame ? Visibility.Visible : Visibility.Collapsed;
+            if (noGame) ProblemInfo.Message = "";
+            ProblemLog.Visibility = noGame ? Visibility.Collapsed : Visibility.Visible;
             Show(ScreenProblem);
         }
         UpdateFooter();

@@ -8,7 +8,7 @@ namespace TinyUIFixApp;
 
 /// A copy of The Sims 3. "ea" and "steam" are found the way the script finds them; "folder" is any other
 /// copy laid out like Steam's (expansions inside it), such as Hydra's, passed to the script by path.
-public sealed record GameInstall(string Kind, string Path)
+public sealed partial record GameInstall(string Kind, string Path)
 {
     public string Title => Kind switch
     {
@@ -57,12 +57,12 @@ public static class Games
 
     public static GameInstall? LoadChoice(string scriptFolder)
     {
-        try { return JsonSerializer.Deserialize<GameInstall>(File.ReadAllText(System.IO.Path.Combine(scriptFolder, SettingsName))); }
+        try { return JsonSerializer.Deserialize(File.ReadAllText(System.IO.Path.Combine(scriptFolder, SettingsName)), AppJson.Default.GameInstall); }
         catch (Exception e) when (e is IOException or JsonException or UnauthorizedAccessException) { return null; }
     }
 
     public static void SaveChoice(string scriptFolder, GameInstall game) =>
-        File.WriteAllText(System.IO.Path.Combine(scriptFolder, SettingsName), JsonSerializer.Serialize(game), new UTF8Encoding(false));
+        File.WriteAllText(System.IO.Path.Combine(scriptFolder, SettingsName), JsonSerializer.Serialize(game, AppJson.Default.GameInstall), new UTF8Encoding(false));
 
     /// The size the game draws at: "resolution = 3840 2160 0" in its Options.ini (the window's size when windowed),
     /// or the primary monitor's when the game hasn't written one yet.
