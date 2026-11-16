@@ -14,6 +14,26 @@ void Check(string name, bool ok, string detail = "")
 bool Near(double a, double b, double tolerance = 0.01) => Math.Abs(a - b) <= tolerance;
 var temp = Directory.CreateTempSubdirectory("tuf-tests-").FullName;
 
+// --- the game's folder from whatever folder the player picks, and its build (1.67 Steam, 1.69 EA app)
+static byte[] Pe(uint stamp) { var b = new byte[0x100]; BitConverter.GetBytes(0x80).CopyTo(b, 0x3C); "PE\0\0"u8.ToArray().CopyTo(b, 0x80); BitConverter.GetBytes(stamp).CopyTo(b, 0x88); return b; }
+string MakeGame(string name, string exe, uint stamp)
+{
+    var root = Path.Combine(temp, name, "The Sims 3");
+    Directory.CreateDirectory(Path.Combine(root, "Game", "Bin"));
+    File.WriteAllBytes(Path.Combine(root, "Game", "Bin", exe), Pe(stamp));
+    return root;
+}
+var steamRoot = MakeGame("steam", "TS3W.exe", 0x52DEC247);
+var eaRoot = MakeGame("ea", "TS3.exe", 0x6707155C);
+foreach (var picked in new[] { steamRoot, steamRoot + "\\", Path.Combine(steamRoot, "Game"), Path.Combine(steamRoot, "Game", "Bin"), Path.Combine(steamRoot, "Game", "Bin", "TS3W.exe"), "\"" + steamRoot + "\"" })
+    Check($"game found from {Path.GetRelativePath(temp, picked.Trim('"'))}", GameInstall.RootOf(picked) == steamRoot, GameInstall.RootOf(picked) ?? "null");
+Check("EA app game (TS3.exe) found from its Bin", GameInstall.RootOf(Path.Combine(eaRoot, "Game", "Bin")) == eaRoot);
+Check("Steam's TS3W.exe is 1.67", new GameInstall("steam", steamRoot).Version == "1.67");
+Check("the EA app's TS3.exe is 1.69", new GameInstall("ea", eaRoot).Version == "1.69");
+File.WriteAllBytes(Path.Combine(eaRoot, "Game", "Bin", "TS3W.exe"), Pe(0x12345678));
+Check("a stray TS3W.exe beside the EA app's TS3.exe is still 1.69", new GameInstall("folder", eaRoot).Version == "1.69");
+Check("a folder without the game isn't the game", GameInstall.RootOf(temp) is null && GameInstall.RootOf(Path.Combine(steamRoot, "Game", "Bin", "UI")) is null);
+
 // --- resolution from Options.ini
 Check("parses resolution", Games.ParseResolution("a = 1\r\nresolution = 3840 2160 0\r\nfullscreen = 0") == (3840, 2160));
 Check("parses extra spaces", Games.ParseResolution("resolution=   2560    1440") == (2560, 1440));
@@ -103,7 +123,10 @@ File.WriteAllText(Path.Combine(fakeGame, "Game", "Bin", "TS3W.exe"), "");
 var found = Games.Find(fakeGame);
 Check("picked game folder is listed", found.Any(g => g.Kind == "folder" && g.Path == fakeGame && g.Title == L.T("game.folder")));
 Check("folder without the game is ignored", !Games.Find(temp).Any(g => g.Path == temp));
-Check("Hydra folder gets its name", new GameInstall("folder", @"C:\Games\Hydra\The Sims 3").Title == L.T("game.hydra"));
+var hydra = new GameInstall("folder", @"C:\Games\Hydra\The Sims 3");
+Check("Hydra folder gets its name", hydra.Title.StartsWith(L.T("game.hydra")), hydra.Title);
+// this machine's Hydra copy has Steam's TS3W.exe 1.67 beside a launcher TS3.exe of no known build
+if (Directory.Exists(hydra.Path)) Check("the real Hydra copy is 1.67", hydra.Version == "1.67", hydra.Version ?? "null");
 Games.SaveChoice(temp, new GameInstall("folder", fakeGame));
 Check("choice round-trips", Games.LoadChoice(temp) == new GameInstall("folder", fakeGame));
 File.WriteAllText(Path.Combine(temp, "TinyUIFixApp.json"), "{broken");

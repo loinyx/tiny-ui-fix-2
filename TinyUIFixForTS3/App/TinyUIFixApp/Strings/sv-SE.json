@@ -106,7 +106,7 @@
   "dialog.cancel": "Avbryt",
   "dialog.ok": "OK",
   "dialog.notGame": "Den mappen är inte The Sims 3",
-  "dialog.notGameBody": "Välj mappen som innehåller Game\\Bin\\TS3W.exe, till exempel C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Välj mappen som innehåller Game\\Bin\\TS3W.exe / TS3.exe, till exempel C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix för The Sims 3",
   "about.originalBody": "Av Harry Gillanders (just-harry), under Boost Software License 1.0. Tiny UI Fix 2 är en fork som gör det enklare att installera: den här appen kör samma skript, utan en webbsida.",

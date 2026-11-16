@@ -106,7 +106,7 @@
   "dialog.cancel": "キャンセル",
   "dialog.ok": "OK",
   "dialog.notGame": "このフォルダーはザ・シムズ3ではありません",
-  "dialog.notGameBody": "Game\\Bin\\TS3W.exe を含むフォルダーを選んでください。例: C:\\Program Files (x86)\\Electronic Arts\\The Sims 3",
+  "dialog.notGameBody": "Game\\Bin\\TS3W.exe / TS3.exe を含むフォルダーを選んでください。例: C:\\Program Files (x86)\\Electronic Arts\\The Sims 3",
 
   "about.original": "ザ・シムズ3 用 Tiny UI Fix",
   "about.originalBody": "作者: Harry Gillanders (just-harry)、Boost Software License 1.0 で提供。Tiny UI Fix 2 はインストールを簡単にするフォークです。このアプリは Web ページを使わずに同じスクリプトを実行します。",

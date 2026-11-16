@@ -106,7 +106,7 @@
   "dialog.cancel": "Mégse",
   "dialog.ok": "OK",
   "dialog.notGame": "Ez a mappa nem a The Sims 3",
-  "dialog.notGameBody": "Válaszd azt a mappát, amelyben a Game\\Bin\\TS3W.exe található, például C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Válaszd azt a mappát, amelyben a Game\\Bin\\TS3W.exe / TS3.exe található, például C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix a The Sims 3-hoz",
   "about.originalBody": "Készítette: Harry Gillanders (just-harry), Boost Software License 1.0 licenc alatt. A Tiny UI Fix 2 egy fork, amely megkönnyíti a telepítést: ez az alkalmazás ugyanazt a szkriptet futtatja, weboldal nélkül.",

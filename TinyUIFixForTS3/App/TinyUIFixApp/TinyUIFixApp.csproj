@@ -24,7 +24,10 @@
          (found by reflection when collections are handed to WinUI) stay whole -->
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
-    <Version>2.0.1</Version>
+    <!-- the XAML resources as resources.pri, the name an unpackaged app finds whatever its exe is called: as "Tiny UI Fix 2.pri",
+         the download (Tiny-UI-Fix-2.exe) looked for its own name and failed its XAML parse at start -->
+    <ProjectPriFileName>resources.pri</ProjectPriFileName>
+    <Version>2.0.2</Version>
     <Product>Tiny UI Fix 2</Product>
   </PropertyGroup>
   <ItemGroup>

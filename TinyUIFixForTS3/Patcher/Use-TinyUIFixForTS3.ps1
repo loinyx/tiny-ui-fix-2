@@ -772,9 +772,9 @@ function Get-Sims3InstallationStateOnWindows ($OverrideSims3Path, $OverrideSims3
 		}
 	)
 
-	<# The Tiny UI Fix 2 app can pass a copy of the game laid out like Steam's (expansions inside it)
-	   that isn't in a Steam library; it's then offered as the Steam version. #>
-	if ($env:TINY_UI_FIX_GAME_PATH -and $Null -eq $OverrideSims3Path -and (Test-Path -LiteralPath (Join-Path $env:TINY_UI_FIX_GAME_PATH 'Game\Bin\TS3W.exe')))
+	<# The Tiny UI Fix 2 app can pass the copy of the game the player chose, laid out like Steam's (expansions inside it):
+	   Steam's 1.67 (TS3W.exe) or the EA app's 1.69 (TS3.exe). It's then offered as the Steam version. #>
+	if ($env:TINY_UI_FIX_GAME_PATH -and $Null -eq $OverrideSims3Path -and ((Test-Path -LiteralPath (Join-Path $env:TINY_UI_FIX_GAME_PATH 'Game\Bin\TS3W.exe')) -or (Test-Path -LiteralPath (Join-Path $env:TINY_UI_FIX_GAME_PATH 'Game\Bin\TS3.exe'))))
 	{
 		$CustomGamePath = $env:TINY_UI_FIX_GAME_PATH
 		$CustomGameLocale = if ($Null -ne $RegistryData.Sims3.BaseGame.Locale) {$RegistryData.Sims3.BaseGame.Locale} else {'en-US'}

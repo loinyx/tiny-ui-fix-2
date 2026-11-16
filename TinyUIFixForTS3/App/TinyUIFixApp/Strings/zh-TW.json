@@ -106,7 +106,7 @@
   "dialog.cancel": "取消",
   "dialog.ok": "確定",
   "dialog.notGame": "該資料夾不是模擬市民3",
-  "dialog.notGameBody": "請選擇包含 Game\\Bin\\TS3W.exe 的資料夾，例如 C:\\Program Files (x86)\\Electronic Arts\\The Sims 3。",
+  "dialog.notGameBody": "請選擇包含 Game\\Bin\\TS3W.exe / TS3.exe 的資料夾，例如 C:\\Program Files (x86)\\Electronic Arts\\The Sims 3。",
 
   "about.original": "適用於模擬市民3的 Tiny UI Fix",
   "about.originalBody": "作者 Harry Gillanders (just-harry)，採用 Boost Software License 1.0 授權。Tiny UI Fix 2 是讓安裝更簡單的分支：此應用程式執行相同的指令碼，無需網頁。",

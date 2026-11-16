@@ -106,7 +106,7 @@
   "dialog.cancel": "취소",
   "dialog.ok": "확인",
   "dialog.notGame": "이 폴더는 심즈 3가 아닙니다",
-  "dialog.notGameBody": "Game\\Bin\\TS3W.exe가 들어 있는 폴더를 선택하세요. 예: C:\\Program Files (x86)\\Electronic Arts\\The Sims 3",
+  "dialog.notGameBody": "Game\\Bin\\TS3W.exe / TS3.exe가 들어 있는 폴더를 선택하세요. 예: C:\\Program Files (x86)\\Electronic Arts\\The Sims 3",
 
   "about.original": "심즈 3용 Tiny UI Fix",
   "about.originalBody": "제작: Harry Gillanders (just-harry), Boost Software License 1.0 라이선스. Tiny UI Fix 2는 설치를 쉽게 해 주는 포크입니다. 이 앱은 웹 페이지 없이 같은 스크립트를 실행합니다.",

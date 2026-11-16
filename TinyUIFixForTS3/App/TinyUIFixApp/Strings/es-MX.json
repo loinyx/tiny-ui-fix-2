@@ -106,7 +106,7 @@
   "dialog.cancel": "Cancelar",
   "dialog.ok": "Aceptar",
   "dialog.notGame": "Esa carpeta no es Los Sims 3",
-  "dialog.notGameBody": "Selecciona la carpeta que contiene Game\\Bin\\TS3W.exe, por ejemplo C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Selecciona la carpeta que contiene Game\\Bin\\TS3W.exe / TS3.exe, por ejemplo C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix para Los Sims 3",
   "about.originalBody": "De Harry Gillanders (just-harry), bajo la Boost Software License 1.0. Tiny UI Fix 2 es un fork que facilita la instalación: esta aplicación ejecuta el mismo script, sin página web.",

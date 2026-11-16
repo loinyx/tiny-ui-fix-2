@@ -106,7 +106,7 @@
   "dialog.cancel": "Zrušit",
   "dialog.ok": "OK",
   "dialog.notGame": "Tato složka není The Sims 3",
-  "dialog.notGameBody": "Vyberte složku, která obsahuje Game\\Bin\\TS3W.exe, například C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Vyberte složku, která obsahuje Game\\Bin\\TS3W.exe / TS3.exe, například C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix pro The Sims 3",
   "about.originalBody": "Od Harry Gillanders (just-harry), pod licencí Boost Software License 1.0. Tiny UI Fix 2 je fork, který usnadňuje instalaci: tato aplikace spouští stejný skript, bez webové stránky.",

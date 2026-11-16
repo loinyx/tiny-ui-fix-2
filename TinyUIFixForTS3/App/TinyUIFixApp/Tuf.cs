@@ -98,7 +98,8 @@ public static class Tuf
             StandardOutputEncoding = Encoding.UTF8,
             StandardErrorEncoding = Encoding.UTF8,
         };
-        if (game?.Kind == "folder") psi.Environment["TINY_UI_FIX_GAME_PATH"] = game.Path;
+        // the exact copy chosen, so the script's Steam path is the one shown (not another Steam library's)
+        if (game is { Kind: not "ea" }) psi.Environment["TINY_UI_FIX_GAME_PATH"] = game.Path;
         foreach (var a in new[] { "-NoProfile", "-ExecutionPolicy", "Bypass", "-EncodedCommand", Convert.ToBase64String(Encoding.Unicode.GetBytes(command)) })
             psi.ArgumentList.Add(a);
 

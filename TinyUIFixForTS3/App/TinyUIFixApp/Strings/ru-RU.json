@@ -106,7 +106,7 @@
   "dialog.cancel": "Отмена",
   "dialog.ok": "OK",
   "dialog.notGame": "Эта папка не The Sims 3",
-  "dialog.notGameBody": "Выберите папку, в которой есть Game\\Bin\\TS3W.exe, например C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Выберите папку, в которой есть Game\\Bin\\TS3W.exe / TS3.exe, например C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix для The Sims 3",
   "about.originalBody": "Автор — Harry Gillanders (just-harry), лицензия Boost Software License 1.0. Tiny UI Fix 2 — это форк, упрощающий установку: приложение запускает тот же скрипт, без веб-страницы.",

@@ -10,14 +10,62 @@ namespace TinyUIFixApp;
 /// copy laid out like Steam's (expansions inside it), such as Hydra's, passed to the script by path.
 public sealed partial record GameInstall(string Kind, string Path)
 {
-    public string Title => Kind switch
+    public string Title => (Kind switch
     {
         "ea" => L.T("game.ea"),
         "steam" => L.T("game.steam"),
         _ => Path.Contains("Hydra", StringComparison.OrdinalIgnoreCase) ? L.T("game.hydra") : L.T("game.folder"),
+    }) + (Version is { } v ? "  ·  " + v : "");
+
+    // the game's build, by the PE timestamp of its exe (as Apex Radiance Setup reads it): Steam's TS3W.exe is 1.67,
+    // the EA app's TS3.exe is 1.69; an unknown exe shows its file version
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string? Version => Exe(Path) is { } exe ? Builds.GetValueOrDefault(PeTimestamp(exe)) ?? FileVersion(exe) : null;
+
+    static readonly Dictionary<uint, string> Builds = new()
+    {
+        [0x52DEC247] = "1.67", [0x52D872DA] = "1.67", [0x6707155C] = "1.69", [0x568D4BAC] = "1.69",
     };
 
-    public static bool IsGame(string dir) => File.Exists(System.IO.Path.Combine(dir, "Game", "Bin", "TS3W.exe"));
+    static string? FileVersion(string exe) =>
+        System.Diagnostics.FileVersionInfo.GetVersionInfo(exe) is { FileMajorPart: > 0 } f ? $"{f.FileMajorPart}.{f.FileMinorPart}" : null;
+
+    static uint PeTimestamp(string file)
+    {
+        try
+        {
+            using var r = new BinaryReader(File.OpenRead(file));
+            r.BaseStream.Position = 0x3C;
+            r.BaseStream.Position = r.ReadInt32() + 8;
+            return r.ReadUInt32();
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentOutOfRangeException or EndOfStreamException) { return 0; }
+    }
+
+    // the game's exe in <game>\Game\Bin: Steam's TS3W.exe or the EA app's TS3.exe, a known build first when both are there
+    public static string? Exe(string root)
+    {
+        var bin = System.IO.Path.Combine(root, "Game", "Bin");
+        var exes = new[] { "TS3W.exe", "TS3.exe" }.Select(e => System.IO.Path.Combine(bin, e)).Where(File.Exists).ToList();
+        return exes.FirstOrDefault(e => Builds.ContainsKey(PeTimestamp(e))) ?? exes.FirstOrDefault();
+    }
+
+    /// The game's folder from the folder or file the player picked: the game's own folder, its Game or Game\Bin folder,
+    /// or the exe; null when it isn't The Sims 3.
+    public static string? RootOf(string picked)
+    {
+        var path = System.IO.Path.TrimEndingDirectorySeparator(System.IO.Path.GetFullPath(picked.Trim().Trim('"')));
+        if (File.Exists(path)) path = System.IO.Path.GetDirectoryName(path)!;
+        var name = System.IO.Path.GetFileName(path);
+        var parent = System.IO.Path.GetDirectoryName(path);
+        var root = name.Equals("Bin", StringComparison.OrdinalIgnoreCase) && parent is not null
+                   && System.IO.Path.GetFileName(parent).Equals("Game", StringComparison.OrdinalIgnoreCase) ? System.IO.Path.GetDirectoryName(parent)
+            : name.Equals("Game", StringComparison.OrdinalIgnoreCase) ? parent
+            : path;
+        return root is not null && Exe(root) is not null ? root : null;
+    }
+
+    public static bool IsGame(string dir) => RootOf(dir) is not null;
 }
 
 public static class Games
@@ -30,9 +78,8 @@ public static class Games
         void Add(string kind, string? dir)
         {
             if (string.IsNullOrWhiteSpace(dir)) return;
-            dir = System.IO.Path.GetFullPath(dir.Trim().TrimEnd('\\', '/'));
-            if (GameInstall.IsGame(dir) && !found.Any(g => string.Equals(g.Path, dir, StringComparison.OrdinalIgnoreCase)))
-                found.Add(new GameInstall(kind, dir));
+            if (GameInstall.RootOf(dir) is { } root && !found.Any(g => string.Equals(g.Path, root, StringComparison.OrdinalIgnoreCase)))
+                found.Add(new GameInstall(kind, root));
         }
 
         using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))

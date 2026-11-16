@@ -106,7 +106,7 @@
   "dialog.cancel": "Annuleren",
   "dialog.ok": "OK",
   "dialog.notGame": "Die map is niet De Sims 3",
-  "dialog.notGameBody": "Kies de map met Game\\Bin\\TS3W.exe erin, bijvoorbeeld C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Kies de map met Game\\Bin\\TS3W.exe / TS3.exe erin, bijvoorbeeld C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix voor De Sims 3",
   "about.originalBody": "Door Harry Gillanders (just-harry), onder de Boost Software License 1.0. Tiny UI Fix 2 is een fork die de installatie eenvoudiger maakt: deze app voert hetzelfde script uit, zonder webpagina.",

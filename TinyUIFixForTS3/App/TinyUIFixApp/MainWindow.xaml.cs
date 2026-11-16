@@ -282,7 +282,7 @@ public sealed partial class MainWindow : Window
         var picker = new Microsoft.Windows.Storage.Pickers.FolderPicker(AppWindow.Id);
         var folder = await picker.PickSingleFolderAsync();
         if (folder is null || _home is null) return;
-        if (!GameInstall.IsGame(folder.Path))
+        if (GameInstall.RootOf(folder.Path) is not { } root)
         {
             await new ContentDialog
             {
@@ -291,7 +291,7 @@ public sealed partial class MainWindow : Window
             }.ShowAsync();
             return;
         }
-        Games.SaveChoice(Tuf.ScriptFolder(_home), new GameInstall("folder", Path.GetFullPath(folder.Path.TrimEnd('\\'))));
+        Games.SaveChoice(Tuf.ScriptFolder(_home), new GameInstall("folder", root));
         await LoadAsync();
     }
 

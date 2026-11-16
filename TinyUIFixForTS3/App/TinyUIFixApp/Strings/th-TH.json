@@ -106,7 +106,7 @@
   "dialog.cancel": "ยกเลิก",
   "dialog.ok": "ตกลง",
   "dialog.notGame": "โฟลเดอร์นี้ไม่ใช่ The Sims 3",
-  "dialog.notGameBody": "เลือกโฟลเดอร์ที่มี Game\\Bin\\TS3W.exe อยู่ข้างใน เช่น C:\\Program Files (x86)\\Electronic Arts\\The Sims 3",
+  "dialog.notGameBody": "เลือกโฟลเดอร์ที่มี Game\\Bin\\TS3W.exe / TS3.exe อยู่ข้างใน เช่น C:\\Program Files (x86)\\Electronic Arts\\The Sims 3",
 
   "about.original": "Tiny UI Fix สำหรับ The Sims 3",
   "about.originalBody": "โดย Harry Gillanders (just-harry) ภายใต้ Boost Software License 1.0 Tiny UI Fix 2 เป็นฟอร์กที่ช่วยให้ติดตั้งง่ายขึ้น แอปนี้รันสคริปต์เดียวกันโดยไม่ต้องใช้หน้าเว็บ",

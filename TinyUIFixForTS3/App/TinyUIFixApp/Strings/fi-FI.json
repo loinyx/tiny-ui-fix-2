@@ -106,7 +106,7 @@
   "dialog.cancel": "Peruuta",
   "dialog.ok": "OK",
   "dialog.notGame": "Kansio ei ole The Sims 3",
-  "dialog.notGameBody": "Valitse kansio, jossa on Game\\Bin\\TS3W.exe, esimerkiksi C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
+  "dialog.notGameBody": "Valitse kansio, jossa on Game\\Bin\\TS3W.exe / TS3.exe, esimerkiksi C:\\Program Files (x86)\\Electronic Arts\\The Sims 3.",
 
   "about.original": "Tiny UI Fix The Sims 3:lle",
   "about.originalBody": "Tekijä Harry Gillanders (just-harry), Boost Software License 1.0 -lisenssillä. Tiny UI Fix 2 on haara, joka helpottaa asennusta: tämä sovellus suorittaa saman komentosarjan ilman verkkosivua.",

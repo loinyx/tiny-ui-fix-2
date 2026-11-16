@@ -106,7 +106,7 @@
   "dialog.cancel": "取消",
   "dialog.ok": "确定",
   "dialog.notGame": "该文件夹不是模拟人生3",
-  "dialog.notGameBody": "请选择包含 Game\\Bin\\TS3W.exe 的文件夹，例如 C:\\Program Files (x86)\\Electronic Arts\\The Sims 3。",
+  "dialog.notGameBody": "请选择包含 Game\\Bin\\TS3W.exe / TS3.exe 的文件夹，例如 C:\\Program Files (x86)\\Electronic Arts\\The Sims 3。",
 
   "about.original": "适用于模拟人生3的 Tiny UI Fix",
   "about.originalBody": "作者 Harry Gillanders (just-harry)，采用 Boost Software License 1.0 授权。Tiny UI Fix 2 是一个让安装更简单的分支：此应用运行相同的脚本，无需网页。",
